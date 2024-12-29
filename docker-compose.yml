@@ -1,20 +1,12 @@
 version: '3.8'
-services:
-  app:
-    build: .
-    ports:
-      - "3333:3333"
-    depends_on:
-      - db
-    environment:
-      DATABASE_URL: postgresql://postgres:postgrespw@db:5432/forum-nodejs-api
 
-  db:
-    image: postgres:15
-    restart: always
+services:
+  forum-nodejs-api:
+    image: bitnami/postgresql
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgrespw
       POSTGRES_DB: forum-nodejs-api
-    ports:
-      - "5432:5432"
+
