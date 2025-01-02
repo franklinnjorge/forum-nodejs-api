@@ -7,7 +7,8 @@ export default defineConfig({
     environmentMatchGlobs: [['src/http/controllers/**', 'prisma']],
     globals: true,
     coverage: {
-      all: false,
+      include: ['src/**'], // Apenas o código fonte
+      exclude: ['**/*.spec.ts', '**/*.spec.js'], // Exclui arquivos de teste
     },
   },
 })

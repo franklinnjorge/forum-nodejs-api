@@ -1,6 +1,7 @@
 node_modules
-dist/
-coverage/
+dist
+coverage
+build
 
 #keys
 .env

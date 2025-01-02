@@ -8,7 +8,7 @@ datasource db {
 }
 
 enum UserRole {
-  ADMINSTRATION
+  ADMINISTRATION
   USER
 }
 
@@ -30,11 +30,11 @@ model Question {
   id        String    @id @default(uuid())
   title     String
   content   String
-  userId    String
+  authorId  String
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
-  user    User     @relation(fields: [userId], references: [id])
+  user    User     @relation(fields: [authorId], references: [id])
   answers Answer[]
 
   @@map("questions")
@@ -44,12 +44,12 @@ model Answer {
   id         String    @id @default(uuid())
   content    String
   questionId String
-  userId     String
+  authorId   String
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime? @updatedAt @map("updated_at")
 
   question Question @relation(fields: [questionId], references: [id])
-  user     User     @relation(fields: [userId], references: [id])
+  user     User     @relation(fields: [authorId], references: [id])
 
   @@map("answers")
 }
