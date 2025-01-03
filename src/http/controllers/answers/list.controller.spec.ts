@@ -21,7 +21,6 @@ describe('Answer - (e2e)', () => {
 
     const response = await request(app.server).get(`/answers/${question.id}`)
 
-    console.log(response.body)
     expect(response.statusCode).toEqual(200)
     expect(response.body.result.answers).toHaveLength(1)
   })
