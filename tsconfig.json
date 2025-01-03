@@ -11,5 +11,5 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "src/@test/repositories/in-memory", "src/@test/repositories/in-memory-questions-repository.ts", "src/@test/repositories/in-memory-users-repository.ts", "src/@test/repositories/in-memory-answers-repository.ts"]
 }

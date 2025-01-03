@@ -9,7 +9,7 @@ import { randomUUID } from 'node:crypto'
 export class InMemoryQuestionsRepository implements QuestionsRepository {
   public items: Question[] = []
 
-  async findByAuthorId(authorId: string) {
+  async findByAuthorId(authorId: string): Promise<Question | null> {
     const question =
       this.items.find((item) => item.authorId === authorId) || null
     return question

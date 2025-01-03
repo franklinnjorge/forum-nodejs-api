@@ -1,23 +1,23 @@
 import { InMemoryQuestionsRepository } from '@/repositories/in-memory/in-memory-questions-repository'
-import { InMemoryUserRepository } from '@/repositories/in-memory/in-memory-users-repository'
+import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { hash } from 'bcryptjs'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { CreateQuestionUseCase } from './create-question'
 import { faker } from '@faker-js/faker'
 
 let questionsRepository: InMemoryQuestionsRepository
-let userRepository: InMemoryUserRepository
+let userRepository: InMemoryUsersRepository
 let sut: CreateQuestionUseCase
 
 describe('Create Question Use Case', () => {
   beforeEach(() => {
     questionsRepository = new InMemoryQuestionsRepository()
-    userRepository = new InMemoryUserRepository()
+    userRepository = new InMemoryUsersRepository()
 
     sut = new CreateQuestionUseCase(questionsRepository)
   })
 
-  it('should be able to get a question by id', async () => {
+  it('should be able to create a question by id', async () => {
     const userCreated = await userRepository.create({
       name: 'Franklin Jorge',
       email: 'franklin-jorge.ca@example.com',

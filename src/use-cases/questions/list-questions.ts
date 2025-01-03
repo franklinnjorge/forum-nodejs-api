@@ -7,7 +7,9 @@ export interface ListQuestionsUseCaseRequest {
 }
 
 export interface ListQuestionsUseCaseResponse {
-  questions: Question
+  result: {
+    questions: Question
+  }
   total: number
   hasNextPage: boolean
 }
@@ -28,7 +30,9 @@ export class ListQuestionsUseCase {
     return {
       total,
       hasNextPage,
-      questions,
+      results: {
+        questions,
+      },
     }
   }
 }
