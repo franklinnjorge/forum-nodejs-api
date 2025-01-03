@@ -1,14 +1,14 @@
-import { defineConfig } from 'vitest/config'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
-    environmentMatchGlobs: [['src/http/controllers/**', 'prisma']],
     globals: true,
+    environmentMatchGlobs: [['src/http/controllers/**', 'prisma']],
     coverage: {
-      include: ['src/**'], // Apenas o código fonte
-      exclude: ['**/*.spec.ts', '**/*.spec.js'], // Exclui arquivos de teste
+      all: false,
     },
+    dir: 'src',
   },
 })
