@@ -5,7 +5,7 @@ import {
   uploadToS3,
 } from '@/services/s3-upload-service'
 import { ResourceNotFoundError } from '../errors/resource-not-found-error'
-import { MultipartFile } from '@fastify/multipart'
+import { MultipartFile } from 'fastify-multipart'
 
 interface UpdateProfileAvatarUseCaseRequest {
   file: MultipartFile
@@ -49,7 +49,7 @@ export class UpdateProfileAvatarUseCase {
       avatarKey,
     })
 
-    if (!user) {
+    if (!userUpdated) {
       throw new ResourceNotFoundError()
     }
 
