@@ -26,4 +26,15 @@ export class PrismaUsersRepository implements UsersRepository {
 
     return newUser
   }
+
+  async updateProfileAvatar(data: Prisma.UserCreateInput) {
+    const updatedUser = await prisma.user.update({
+      where: { id: data.id },
+      data: {
+        avatarKey: data.avatarKey,
+      },
+    })
+
+    return updatedUser
+  }
 }

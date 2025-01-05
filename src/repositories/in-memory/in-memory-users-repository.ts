@@ -31,11 +31,38 @@ export class InMemoryUsersRepository implements UsersRepository {
       name: data.name,
       email: data.email,
       password_hash: data.password_hash,
-      createdAt: new Date(),
       role: data.role || UserRole.USER,
+      avatarKey: data.avatarKey || null,
+      createdAt: new Date(),
+      updatedAt: null,
     }
 
     this.items.push(user)
     return user
+  }
+
+  async updateProfileAvatar(
+    data: Prisma.UserUpdateInput,
+  ): Promise<User | null> {
+    const userIndex = this.items.findIndex((user) => user.id === data.id)
+
+    if (userIndex === -1) {
+      return null
+    }
+
+    let avatarKey: string | null = null
+    if (typeof data.avatarKey === 'string' || data.avatarKey === null) {
+      avatarKey = data.avatarKey
+    } else if (data.avatarKey && typeof data.avatarKey.set === 'string') {
+      avatarKey = data.avatarKey.set
+    }
+
+    this.items[userIndex] = {
+      ...this.items[userIndex],
+      avatarKey,
+      updatedAt: new Date(),
+    }
+
+    return this.items[userIndex]
   }
 }
