@@ -1,4 +1,5 @@
 import fastifyJwt from '@fastify/jwt'
+import fastifyCookie from '@fastify/cookie'
 import multipart from '@fastify/multipart'
 import fastifySwagger from '@fastify/swagger'
 import fastifySwaggerUi from '@fastify/swagger-ui'
@@ -10,15 +11,17 @@ import { answersRoutes } from './http/controllers/answers/routes'
 import { questionsRoutes } from './http/controllers/questions/routes'
 import { usersRoutes } from './http/controllers/users/routes'
 
-export const app = fastify({
-  logger: true,
-})
+export const app = fastify()
 
 export const prisma = new PrismaClient()
 
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
+  cookie: { cookieName: 'refreshToken', signed: false },
+  sign: { expiresIn: '10m' },
 })
+
+app.register(fastifyCookie)
 
 app.register(multipart, {
   limits: {
