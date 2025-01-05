@@ -1,17 +1,24 @@
-import fastify from 'fastify'
+import fastifyJwt from '@fastify/jwt'
 import { PrismaClient } from '@prisma/client'
-import { usersRoutes } from './http/controllers/users/routes'
+import fastify from 'fastify'
 import { ZodError } from 'zod'
 import { env } from './env'
-import fastifyJwt from '@fastify/jwt'
-import { questionsRoutes } from './http/controllers/questions/routes'
 import { answersRoutes } from './http/controllers/answers/routes'
+import { questionsRoutes } from './http/controllers/questions/routes'
+import { usersRoutes } from './http/controllers/users/routes'
+import multipart from '@fastify/multipart'
 
 export const app = fastify()
 export const prisma = new PrismaClient()
 
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
+})
+
+app.register(multipart, {
+  limits: {
+    fileSize: 2 * 1024 * 1024,
+  },
 })
 
 app.register(usersRoutes)
