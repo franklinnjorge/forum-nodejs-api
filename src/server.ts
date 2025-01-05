@@ -1,9 +1,5 @@
-import swagger from '@fastify/swagger'
 import { app } from './app'
 import { env } from './env'
-import { swaggerConfig } from './plugins/swagger'
-
-app.register(swagger, swaggerConfig)
 
 const start = async () => {
   try {
