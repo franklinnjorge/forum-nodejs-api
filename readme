@@ -66,8 +66,19 @@ This is a simple forum API built with Node.js. It allows users to create, read, 
 
 4. Create a `.env` file in the root directory and add the following variables:
   ```env
-  DATABASE_URL=your_database_url
-  JWT_SECRET=your_jwt_secret
+    NODE_ENV=dev
+    
+    # Auth 
+    JWT_SECRET=
+    
+    # Aws
+    AWS_BUCKET_NAME=
+    AWS_ACCESS_KEY_ID=
+    AWS_SECRET_ACCESS_KEY=
+    AWS_REGION=
+    
+    # Database
+    DATABASE_URL="username://username:password@localhost:5432/forum-nodejs-api?connection_limit=10"
   ```
 
 5. Build the Docker image:
