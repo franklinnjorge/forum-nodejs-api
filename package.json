@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "tsup src --out-dir build --format esm",
-    "start": "node build/server.js",
-    "start:dev": "tsx watch src/server.ts",
+    "start": "node build/app.js",
+    "start:dev": "tsx watch src/app.ts",
     "test:create-prisma-environment": "npm link ./prisma/vitest-environment-prisma",
     "test:install-prisma-environment": "npm link vitest-environment-prisma",
     "lint": "eslint --ext .ts src",
