@@ -20,3 +20,64 @@ This is a simple forum API built with Node.js. It allows users to create, read, 
 - bcrypt for password hashing
 
 ## Installation
+
+1. Clone the repository:
+  ```sh
+  git clone https://github.com/yourusername/forum-nodejs-api.git
+  ```
+2. Navigate to the project directory:
+  ```sh
+  cd forum-nodejs-api
+  ```
+3. Install the dependencies:
+  ```sh
+  npm install
+  ```
+4. Set up the environment variables:
+  - Create a `.env` file in the root directory.
+  - Add the following variables to the `.env` file:
+    ```env
+    DATABASE_URL=your_database_url
+    JWT_SECRET=your_jwt_secret
+    ```
+5. Run the database migrations:
+  ```sh
+  npm run migrate
+  ```
+6. Start the development server:
+  ```sh
+  npm run dev
+  ```
+7. Open your browser and navigate to `http://localhost:3333` to access the API.
+
+## Docker Installation
+
+1. Ensure you have Docker installed on your machine. If not, you can download it from [here](https://www.docker.com/products/docker-desktop).
+
+2. Clone the repository:
+  ```sh
+  git clone https://github.com/yourusername/forum-nodejs-api.git
+  ```
+
+3. Navigate to the project directory:
+  ```sh
+  cd forum-nodejs-api
+  ```
+
+4. Create a `.env` file in the root directory and add the following variables:
+  ```env
+  DATABASE_URL=your_database_url
+  JWT_SECRET=your_jwt_secret
+  ```
+
+5. Build the Docker image:
+  ```sh
+  docker build -t forum-nodejs-api .
+  ```
+
+6. Run the Docker container:
+  ```sh
+  docker run -d -p 3333:3333 --env-file .env forum-nodejs-api
+  ```
+
+7. Open your browser and navigate to `http://localhost:3333` to access the API.
