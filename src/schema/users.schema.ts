@@ -71,29 +71,52 @@ export const profileSchema = {
       description: 'User profile retrieved successfully',
       type: 'object',
       properties: {
-        id: { type: 'string' },
-        name: { type: 'string' },
-        email: { type: 'string' },
+        user: {
+          id: { type: 'string', description: 'Unique identifier of the user' },
+          name: { type: 'string', description: 'Name of the user' },
+          email: {
+            type: 'string',
+            format: 'email',
+            description: 'User email address',
+          },
+          avatarUrl: { type: 'string', description: 'URL of the user avatar' },
+          createdAt: {
+            type: 'string',
+            format: 'date-time',
+            description: 'User creation date',
+          },
+          updatedAt: {
+            oneOf: [{ type: 'string', format: 'date-time' }, { type: 'null' }],
+            description: 'Date when the profile was last updated',
+          },
+        },
       },
     },
     401: {
       description: 'Unauthorized',
       type: 'object',
+      required: ['message'],
       properties: {
-        message: { type: 'string' },
+        message: { type: 'string', description: 'Error message' },
       },
     },
   },
 }
 
 export const updateProfileAvatarSchema = {
-  description: 'Update user profile avatar',
   tags: ['Users'],
+  description: 'Update user profile avatar',
+  consumes: ['multipart/form-data'],
   body: {
     type: 'object',
-    required: ['avatar'],
     properties: {
-      avatar: { type: 'string' },
+      content: {
+        type: 'string',
+      },
+      media: {
+        type: 'string',
+        format: 'binary',
+      },
     },
   },
   response: {
@@ -101,7 +124,25 @@ export const updateProfileAvatarSchema = {
       description: 'User profile avatar updated successfully',
       type: 'object',
       properties: {
-        message: { type: 'string' },
+        user: {
+          id: { type: 'string', description: 'Unique identifier of the user' },
+          name: { type: 'string', description: 'Name of the user' },
+          email: {
+            type: 'string',
+            format: 'email',
+            description: 'User email address',
+          },
+          avatarUrl: { type: 'string', description: 'URL of the user avatar' },
+          createdAt: {
+            type: 'string',
+            format: 'date-time',
+            description: 'User creation date',
+          },
+          updatedAt: {
+            oneOf: [{ type: 'string', format: 'date-time' }, { type: 'null' }],
+            description: 'Date when the profile was last updated',
+          },
+        },
       },
     },
     401: {

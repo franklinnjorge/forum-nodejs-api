@@ -48,7 +48,7 @@ const swaggerOptions = {
           type: 'http',
           scheme: 'bearer',
           bearerFormat: 'JWT',
-        },
+        } as const,
       },
     },
     security: [
