@@ -1,69 +1,105 @@
-import { describe, it, expect, vi } from 'vitest'
+import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
+import { hash } from 'bcryptjs'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 import { UpdateProfileAvatarUseCase } from './update-profile-avatar'
-import { UsersRepository } from '@/repositories/users-repository'
-import { uploadToS3, getImageByKey } from '@/services/s3-upload-service'
-import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error'
+import { MultipartFile } from '@fastify/multipart'
+import {
+  deleteImageByKey,
+  getImageByKey,
+  uploadToS3,
+} from '@/services/s3-upload-service'
 
-vi.mock('@/services/s3-upload-service')
+let userRepository: InMemoryUsersRepository
+let sut: UpdateProfileAvatarUseCase
 
-describe('UpdateProfileAvatarUseCase', () => {
-  it('should update the user profile avatar', async () => {
-    const mockUsersRepository = {
-      updateProfileAvatar: vi.fn().mockResolvedValue({
-        id: 'user-id',
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        avatarKey: 'avatar-key',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }),
-    } as unknown as UsersRepository
-
-    const mockUploadToS3 = uploadToS3 as vi.Mock
-    mockUploadToS3.mockResolvedValue({ Key: 'avatar-key' })
-
-    const mockGetImageByKey = getImageByKey as vi.Mock
-    mockGetImageByKey.mockResolvedValue('https://example.com/avatar.jpg')
-
-    const updateProfileAvatarUseCase = new UpdateProfileAvatarUseCase(
-      mockUsersRepository,
-    )
-
-    const result = await updateProfileAvatarUseCase.execute({
-      file: {} as any, // Simulando um arquivo
-      userId: 'user-id',
-    })
-
-    expect(mockUploadToS3).toHaveBeenCalledWith({}, 'user-id')
-    expect(mockGetImageByKey).toHaveBeenCalledWith('avatar-key')
-    expect(mockUsersRepository.updateProfileAvatar).toHaveBeenCalledWith({
-      id: 'user-id',
-      avatarKey: 'avatar-key',
-    })
-    expect(result.user).toEqual({
-      id: 'user-id',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      avatarUrl: 'https://example.com/avatar.jpg',
-      createdAt: expect.any(Date),
-      updatedAt: expect.any(Date),
-    })
+describe('Update Profile Avatar Use Case', () => {
+  beforeEach(() => {
+    userRepository = new InMemoryUsersRepository()
+    sut = new UpdateProfileAvatarUseCase(userRepository)
   })
 
-  it('should throw ResourceNotFoundError if user is not found', async () => {
-    const mockUsersRepository = {
-      updateProfileAvatar: vi.fn().mockResolvedValue(null),
-    } as unknown as UsersRepository
+  vi.mock('@/services/s3-upload-service', () => ({
+    deleteImageByKey: vi.fn(),
+    getImageByKey: vi.fn(),
+    uploadToS3: vi.fn(),
+  }))
 
-    const updateProfileAvatarUseCase = new UpdateProfileAvatarUseCase(
-      mockUsersRepository,
-    )
+  describe('Update Profile Avatar Use Case', () => {
+    beforeEach(() => {
+      userRepository = new InMemoryUsersRepository()
+      sut = new UpdateProfileAvatarUseCase(userRepository)
+    })
 
-    await expect(
-      updateProfileAvatarUseCase.execute({
-        file: {} as any, // Simulando um arquivo
-        userId: 'non-existent-user-id',
-      }),
-    ).rejects.toBeInstanceOf(ResourceNotFoundError)
+    it('should be able to update profile avatar', async () => {
+      const newUser = await userRepository.create({
+        name: 'Franklin Jorge',
+        email: 'franklin-jorge.ca@example.com',
+        password_hash: await hash('123456', 6),
+      })
+
+      const file = {
+        filename: 'avatar.png',
+        mimetype: 'image/png',
+        data: Buffer.from(''),
+      } as unknown as MultipartFile
+
+      const uploadResult = {
+        Key: 'avatar-key',
+        $metadata: { httpStatusCode: 200 },
+      }
+      const avatarUrl = 'https://s3.amazonaws.com/bucket/avatar-key'
+
+      vi.mocked(uploadToS3).mockResolvedValue(uploadResult)
+      vi.mocked(getImageByKey).mockResolvedValue(avatarUrl)
+
+      const { user } = await sut.execute({ file, userId: newUser.id })
+
+      expect(user.avatarUrl).toEqual(avatarUrl)
+      expect(user.name).toEqual('Franklin Jorge')
+    })
+
+    it('should delete old avatar if exists', async () => {
+      const newUser = await userRepository.create({
+        name: 'Franklin Jorge',
+        email: 'franklin-jorge.ca@example.com',
+        password_hash: await hash('123456', 6),
+        avatarKey: 'old-avatar-key',
+      })
+
+      const file = {
+        filename: 'avatar.png',
+        mimetype: 'image/png',
+        data: Buffer.from(''),
+      } as unknown as MultipartFile
+      const uploadResult = {
+        Key: 'new-avatar-key',
+        $metadata: { httpStatusCode: 200 },
+      }
+      const avatarUrl = 'https://s3.amazonaws.com/bucket/new-avatar-key'
+
+      vi.mocked(uploadToS3).mockResolvedValue(uploadResult)
+      vi.mocked(getImageByKey).mockResolvedValue(avatarUrl)
+
+      const { user } = await sut.execute({ file, userId: newUser.id })
+
+      expect(deleteImageByKey).toHaveBeenCalledWith('old-avatar-key')
+      expect(user.avatarUrl).toEqual(avatarUrl)
+    })
+
+    it('should not be able to update profile avatar with wrong id', async () => {
+      const file = {
+        filename: 'avatar.png',
+        mimetype: 'image/png',
+        data: Buffer.from(''),
+      } as unknown as MultipartFile
+
+      await expect(async () => {
+        await sut.execute({
+          file,
+          userId: 'not-exists-id',
+        })
+      }).rejects.toBeInstanceOf(ResourceNotFoundError)
+    })
   })
 })
