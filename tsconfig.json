@@ -8,6 +8,8 @@
     "forceConsistentCasingInFileNames": true,  
     "baseUrl": "./",
     "resolveJsonModule": true,
+    "outDir": "./build",
+    "rootDir": "./src",
     "paths": {
       "@/*": ["src/*"]
     }
