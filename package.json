@@ -6,7 +6,7 @@
     "node": "20.x"
   },
   "scripts": {
-"build": "tsup src --out-dir build",
+    "build": "tsup src --out-dir build",
     "start": "node -r tsconfig-paths/register build/app.js",
     "start:dev": "tsx watch src/app.ts",
     "test:create-prisma-environment": "npm link ./prisma/vitest-environment-prisma",
