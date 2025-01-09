@@ -1,14 +1,13 @@
 {
   "name": "forum-nodejs-api",
   "version": "1.0.0",
-  "main": "app.js",
-  "type": "module",
+  "main": "build/app.js",
   "engines": {
-    "node": "22.x"
+    "node": "20.x"
   },
   "scripts": {
-    "build": "tsc",
-    "start": "node build/app.js",
+"build": "tsup src --out-dir build",
+    "start": "node -r tsconfig-paths/register build/app.js",
     "start:dev": "tsx watch src/app.ts",
     "test:create-prisma-environment": "npm link ./prisma/vitest-environment-prisma",
     "test:install-prisma-environment": "npm link vitest-environment-prisma",
@@ -43,6 +42,7 @@
     "dotenv": "^16.4.7",
     "fastify": "^5.2.0",
     "fastify-swagger": "^5.1.1",
+    "tsconfig-paths": "^4.2.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
