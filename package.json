@@ -5,6 +5,7 @@
   "engines": {
     "node": "20.x"
   },
+  "type": "module",
   "scripts": {
     "build": "tsup src --out-dir build",
     "start": "node -r tsconfig-paths/register build/app.js",
