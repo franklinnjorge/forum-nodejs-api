@@ -78,6 +78,9 @@ app.register(fastifySwaggerUi, swaggerUiOptions)
 app.register(usersRoutes)
 app.register(questionsRoutes)
 app.register(answersRoutes)
+app.get('/', async () => {
+  return 'Welcome to the Forum API'
+})
 
 app.setErrorHandler((error, request, reply) => {
   if (error instanceof ZodError) {
