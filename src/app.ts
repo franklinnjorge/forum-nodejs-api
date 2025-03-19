@@ -10,6 +10,7 @@ import { env } from './env'
 import { answersRoutes } from './http/controllers/answers/routes'
 import { questionsRoutes } from './http/controllers/questions/routes'
 import { usersRoutes } from './http/controllers/users/routes'
+import awsLambdaFastify from '@fastify/aws-lambda'
 
 export const app = fastify()
 
@@ -109,3 +110,4 @@ const start = async () => {
 start()
 
 export default app
+export const handler = awsLambdaFastify(app)
