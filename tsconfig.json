@@ -4,15 +4,25 @@
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,  
-    "baseUrl": "./",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "build",
+    "baseUrl": ".",
     "resolveJsonModule": true,
-    "outDir": "./build",
     "rootDir": "./src",
     "paths": {
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*", "src/@test/repositories/in-memory", "src/@test/repositories/in-memory-questions-repository.ts", "src/@test/repositories/in-memory-users-repository.ts", "src/@test/repositories/in-memory-answers-repository.ts"]
+  "include": [
+    "./src/**/*",
+    "src/@test/repositories/in-memory",
+    "src/@test/repositories/in-memory-questions-repository.ts",
+    "src/@test/repositories/in-memory-users-repository.ts",
+    "src/@test/repositories/in-memory-answers-repository.ts"
+  ]
 }
