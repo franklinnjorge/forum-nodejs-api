@@ -107,18 +107,6 @@ export const updateProfileAvatarSchema = {
   tags: ['Users'],
   description: 'Update user profile avatar',
   consumes: ['multipart/form-data'],
-  body: {
-    type: 'object',
-    properties: {
-      content: {
-        type: 'string',
-      },
-      media: {
-        type: 'string',
-        format: 'binary',
-      },
-    },
-  },
   response: {
     200: {
       description: 'User profile avatar updated successfully',
